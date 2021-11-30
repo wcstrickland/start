@@ -1,0 +1,13 @@
+sudo pacman -S python-pip
+python3 -m pip install --user --upgrade pip
+pip install --user pipenv
+fix possible path issues
+pipenv will give usage help
+pipenv install <module> will install in virtual environment
+pipenv shell will enter the venv
+deactivate will exit the venv
+alternatively pipenv run <command> will run a command in the venv
+
+
+ps pipenv install autopep8
+autopep8 --in-place --aggressive <file_name>
