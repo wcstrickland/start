@@ -83,19 +83,19 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 
 vnoremap <c-_> :norm i//<esc>
-vnoremap <leader># :norm i#<esc>
 
 "basic pairs functionality with no Plugin"
 inoremap ( ()<esc>i
-inoremap ) <esc>ls)
+inoremap ) <esc>la
 inoremap [ []<esc>i
-inoremap ] <esc>ls]
+inoremap ] <esc>la
 inoremap { {}<esc>i
-inoremap } <esc>ls}
+inoremap } <esc>la
 inoremap " ""<esc>i
 inoremap "" <C-o>a
 inoremap ' ''<esc>i
 inoremap '' <C-o>a
+
 
 "preview markdown files on save"
 "requires latex and pandoc"
@@ -115,8 +115,9 @@ autocmd BufWinEnter *.* silent loadview
 "au BufNewFile * :badd ~/.vim/git.md"
 
 "run current js file in node"
-nnoremap <leader>node :! node <c-r>% <Bar> less <CR>
-nnoremap <leader>py :! python3 <c-r>% <Bar> less <CR>
+autocmd BufWritePost *.py :!python3 <afile>
+autocmd BufWritePost *.js :!node <afile>
+autocmd BufWritePost *.java :!javac <afile>
 
 "recursive rough spell check macro: requires turning spelling on first with :set spell"
 let @s="]s1z=@s"
