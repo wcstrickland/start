@@ -6,8 +6,6 @@
 "                            "
 "headers"
 set nocompatible
-syntax on
-colorscheme ron
 filetype plugin on
 packloadall
 
@@ -26,8 +24,12 @@ let g:netrw_alto=0    "preview to right"
 let g:netrw_preview=1  "privew vert"
 
 "default formatting"
-set display=lastline
+syntax on
+colorscheme desert
 set hlsearch  "highlight search"
+highlight Search cterm=None ctermfg=Black ctermbg=LightYellow
+highlight Visual cterm=None ctermfg=Black ctermbg=Green
+set display=lastline
 set hidden
 set laststatus=2   "always show status"
 set splitright    "default vert split"
@@ -155,7 +157,7 @@ nnoremap K :cNext<cr>
 nnoremap R :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
 
 "close and open"
-nnoremap <leader>q :q<cr>
+nnoremap <leader>q :bd<cr>
 nnoremap <leader>w :w<CR>
 nnoremap zq ZQ
 
