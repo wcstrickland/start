@@ -51,10 +51,7 @@ set clipboard=unnamedplus "allows pasting from OS clipboard"
 
 "simple statusline"
 set statusline=
-set statusline+=\ %F
-set statusline+=\ %M
-set statusline+=\ %R
-set statusline+=\ %L
+set statusline+=\%#ModeMsg#%.20F%m%y[%#SpecialKey#%l%#Question#\|%#LineNr#%L%#ModeMsg#]%#CursorLine# 
 
 "create and load views"
 autocmd BufWinLeave *.* mkview
@@ -80,6 +77,8 @@ nnoremap k gk
 "autocomplete"
 set completeopt=longest,menuone
 inoremap kk <C-n>
+"filepath complete"
+inoremap ;; <C-x><C-f>
 
 "SHORTCUTS"
 
@@ -95,8 +94,6 @@ inoremap <leader>elif if(){<CR>console.log();<CR>}else if(){<CR>console.log();<C
 inoremap <leader>map map((x) => ())<Esc>hi
 "function"
 inoremap <leader>func function (){<cr>console.log();<cr>}<esc>k>>kf(i
-"arrow function"
-inoremap <leader>> ()=>{<cr>console.log();<cr>}<esc>k>>kf)i
 "python main"
 inoremap <leader>main def<CR><cr>def main():<cr><tab>pass<cr><cr><esc>Iif __name__ == "__main__":<cr><tab>main()
 
@@ -112,20 +109,6 @@ function! PassOverClosing(char)
     endif
 endfunction
 
-function! PassOverQuotes(char)
-    let g:singles = ''
-    let g:doubles = ""
-    let g:closers = [g:singles, g:doubles]
-    let g:curChar = getline('.')[col('.')-0]
-    if index(g:closers, g:curChar) >= 0
-        execute "normal! a"a:char.a:char
-        execute "normal! h"
-    else
-        normal la
-    endif
-endfunction
-
-
 inoremap ( ()<esc>i
 inoremap <silent>) <esc>:call PassOverClosing(')')<cr>a
 inoremap [ []<esc>i
@@ -134,13 +117,14 @@ inoremap { {}<esc>i
 inoremap <silent>} <esc>:call PassOverClosing('}')<cr>a
 inoremap {<cr> {<cr>}<esc>O<tab>
 inoremap :<cr> :<cr><tab>
-inoremap <silent>" <esc>:call PassOverQuotes('"')<cr>a
-inoremap <silent>' <esc>:call PassOverQuotes('''')<cr>a
+inoremap " ""<esc>i
+inoremap "" <esc>ls"
+inoremap ' ''<esc>i
+inoremap '' <esc>ls'
 
- 
 let mapleader = " "
 
-"projects"
+"projects set .viminfo at project level"
 function! SetProject()
     let path = expand('%:p')
     let g:stub = matchstr(path, '\v\/home\/bill\/[a-z]*[A-Z]*[0-9]*\/')
@@ -166,7 +150,6 @@ endfunction
 nnoremap <silent>Q :call ToggleQuickFix()<cr>
 nnoremap J :cnext<cr>
 nnoremap K :cNext<cr>
-
 
 "replace exact word under cursor"
 nnoremap R :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
@@ -198,18 +181,17 @@ nnoremap <leader>k <c-w>k
 nnoremap <leader>l <c-w>l
 
 "change buffers"
-nnoremap H :bn<cr>
+nnoremap H :bn<cr>           
 nnoremap L :bp<cr>
 nnoremap <leader>b :ls<cr>:b<space>
 
 "jumplist"
-nnoremap S :ju<cr>
 nnoremap <leader>i <c-i>
 nnoremap <leader>o <c-o>
 
 "marks"
-nnoremap M :marks abcdefghijklmnopqrstuvwxyz<cr>:normal `
-nnoremap <leader>m :marks ABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal `
+nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyz<cr>:normal `
+nnoremap M :marks ABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal `
 
 "move highlighted blocks up and down"
 vnoremap J :m '>+1<CR>gv=gv
@@ -222,11 +204,16 @@ nnoremap * *N
 nnoremap <leader>p :reg<cr>:put 
 
 "search list for word under cursor"
-nnoremap <leader>* [I:
+nnoremap <leader>* [I
 
 "search list"
 nnoremap <leader>/ :g/
 
+"trim all trailing whitespace"
+function TrailWhite()
+    execute '%s/\s\+$//e'
+endfunction
+nnoremap <leader>t :call TrailWhite()<cr>
 
 "better bol/eol"
 nnoremap - _
