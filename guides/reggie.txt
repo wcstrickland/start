@@ -1,0 +1,72 @@
+pressing CTRL + r while in command mode followed by the desired register will paste
+the contents of that register into the command mode
+Usefull for editing a complex search or regex
+
+[...]                   custom character class
+[^...]                  negated custom character class
+[a-z]                   ranges
+{3}                     3 occurences
+{2,5}                   2 to 5 occurences
+.                       any char except newline
+\w                      "word" char
+[[:upper:]]/[[:lower:]] Case
+\W                      Non "word"
+[[:space:]]             whitespace except newline
+[^[:space:]]            non whitespace
+[[:digit:]]
+[[:punct:]]
+[[:alpha:]]
+[[:alnum:]]
+\<                      start of word
+\>                      end of word
+\b                      word boundray(non vim)
+^                       beginning of pattern/string
+$                       end of pattern/string
+\?                      0 or 1 only escaped in vim
+*                       0 or more
+\+                      1 or more only escaped in vim
+
+
+
+%s/\v[A-Z]+ [a-z]+ 205\-[0-9]{3}\-[0-9]{4}
+# 205-three numbers-three numbers a num 0-3
+
+205-253-2115
+James Monty 205-743-8888   James Jenny 205-743-8888   James Monty 205-743-8888   265-743-8888
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+Jenny Monty 205-743-8881   Jenny Monty 305-743-8888   James Monty 305-743-8888   205-143-3848   
+James Dicky 245-743-8888   James Monty 245-743-8888   Dicky Monty 205-743-8882   205-223-4113
+Bobbi Dicky 205-413-9878   Bobbi Monty 205-413-9878   James Monty 205-413-9878   205-223-4112
+James Monty 265-743-8888   James Monty 265-743-8888   Dicky Monty 265-743-8888   305-743-8888
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+James Monty 205-143-3848   James Monty 205-143-3848   James Monty 205-143-3848   245-743-8888
+Bobbi Monty 205-223-4113   James Dicky 205-223-4113   James Monty 205-223-4113   205-413-9878
+James Monty 205-223-4112   Bobbi Monty 205-223-4111   James Monty 205-223-4110   265-743-8888
+James Monty 205-743-8888   James Monty 205-743-8888   James Monty 305-743-8888   205-143-3848
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+James Monty 245-743-8888   James Dicky 245-743-8888   James Monty 245-743-8888   205-223-4113
+Bobbi Monty 205-413-9878   James Monty 205-413-9878   James Monty 205-413-9878   205-743-8888
+James Monty 265-743-8888   James Monty 265-743-8888   Dicky Monty 265-743-8888   305-743-8888
+James Monty 205-143-3848   James Monty 205-143-3848   James Monty 205-143-3848   205-743-8888
+Bobbi Dicky 205-223-4113   James Dicky 205-223-4113   James Monty 205-223-4113   305-743-8888
+James Monty 205-743-8888   James Monty 205-743-8888   James Monty 205-743-8888   245-743-8888
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+this is a long line of text  this is a long line of textthis is a long line of textthis is a long line of tex
+James Monty 205-743-8888   James Monty 205-743-8888   Dicky Monty 305-743-8888   205-413-9878
+James Monty 245-743-8888   Bobbi Monty 245-743-8888   James Bobbi 245-743-8888   265-743-8888
+Jenny Monty 205-413-9878   James Monty 205-413-9878   James Monty 205-413-9878   205-143-3848
+James Monty 265-743-8888   Jenny Monty 265-743-8888   James Monty 265-743-8888   205-223-4113
+James Monty 205-143-3848   James Bobbi 205-143-3848   Dicky Bobbi 205-143-3848   205-223-4110
+James Monty 205-223-4113   James Monty 205-223-4113   James Monty 205-223-4113   305-743-8888
