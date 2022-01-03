@@ -1,0 +1,15 @@
+- [rwx] [rwx] [rwx]   (r)ead, (w)rite, (x)ecute
+|   |     |     |
+|   |     |     ----   ALL
+|   |     |     
+|   |     ------------ GROUP     
+|   |          
+|   ------------------ OWNER          
+|
+---------------------- File Type - indicated directory
+
+
+  Mode          Owner  Group  Size     mod date      file name
+---------------------------------------------------------------
+drwxrwxrwx | 2 | sammy | samy | 4096 | Nov 10 12:15 | app.js
+-rwxrwx--- | 2 | root  | devs | 9096 | Nov 11 12:15 | routes.js
