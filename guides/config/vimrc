@@ -19,8 +19,11 @@ highlight DiffAdd cterm=None ctermfg=Black ctermbg=Green
 highlight DiffChange cterm=None ctermfg=Black ctermbg=DarkBlue
 highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
 highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
+highlight SpecialKey ctermfg=DarkGrey
 set display=lastline
 set hidden
+set listchars=multispace:····¦
+set list
 set laststatus=2   "always show status"
 set splitright    "default vert split"
 set splitbelow "causes splits below"
@@ -91,7 +94,6 @@ inoremap <silent>] <esc>:call PassOverClosing(']')<cr>a
 inoremap { {}<esc>i
 inoremap <silent>} <esc>:call PassOverClosing('}')<cr>a
 inoremap {<cr> {<cr>}<esc>O<tab>
-inoremap :<cr> :<cr><tab>
 inoremap " ""<esc>i
 inoremap "" <esc>ls"
 inoremap ' ''<esc>i
