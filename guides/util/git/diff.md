@@ -8,3 +8,9 @@ git diff --staged will show diff between staged and last
 
 git config --global diff.tool vimdiff
 git config --global difftool.prompt false
+
+
+git commit
+:vertical new
+:%!git diff --staged
+:set filetype=diff
