@@ -177,7 +177,7 @@ vnoremap <leader>" di""<esc>P
 nnoremap <leader>f :Vex 20<CR>
 autocmd VimResized * wincmd =
 "commenting"
-nnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? '0d2l' : '0i//<esc>'
+vnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? ':norm 0d2l<cr>' : ':norm 0i//<esc>'
 "improved window nav"
 nnoremap <leader>h <c-w>h
 nnoremap <leader>j <c-w>j
