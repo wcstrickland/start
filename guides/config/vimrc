@@ -22,7 +22,7 @@ highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
 highlight SpecialKey ctermfg=DarkGrey
 set display=lastline
 set hidden
-set listchars=multispace:····¦
+set listchars=multispace:···¦
 set list
 set laststatus=2   "always show status"
 set splitright    "default vert split"
@@ -41,7 +41,7 @@ set autoindent
 set noerrorbells
 set novisualbell
 "set clipboard^=unamed"
-set clipboard=unnamedplus "allows pasting from OS clipboard"
+"set clipboard=unnamedplus allows pasting from OS clipboard"
 "simple statusline"
 set ruler
 set statusline=
@@ -92,8 +92,8 @@ inoremap <silent>) <esc>:call PassOverClosing(')')<cr>a
 inoremap [ []<esc>i
 inoremap <silent>] <esc>:call PassOverClosing(']')<cr>a
 inoremap { {}<esc>i
+inoremap {<cr> {<cr><cr>}<esc>ki
 inoremap <silent>} <esc>:call PassOverClosing('}')<cr>a
-inoremap {<cr> {<cr>}<esc>O<tab>
 inoremap " ""<esc>i
 inoremap "" <esc>ls"
 inoremap ' ''<esc>i
@@ -133,7 +133,7 @@ inoremap kk <C-n>
 "filepath complete"
 inoremap ;; <C-x><C-f>
 "open a new split and read the current buffer into it"
-nnoremap <leader>y :vnew<cr>:0read #<cr>:close<cr>
+nnoremap <leader>s :vnew<cr>:0read #<cr>:close<cr>
 "if not in diffmode diff the splits. if in diff mode exit diff "
 nnoremap <expr> <leader>d &diff ? ':diffoff<cr>' : ':diffthis<cr><c-w>w:diffthis<cr>'
 "projects set .viminfo at project level"
@@ -177,8 +177,7 @@ vnoremap <leader>" di""<esc>P
 nnoremap <leader>f :Vex 20<CR>
 autocmd VimResized * wincmd =
 "commenting"
-vnoremap <C-_> :norm 0i//<esc>
-vnoremap <leader>c :norm 0i#<esc>
+nnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? '0d2l' : '0i//<esc>'
 "improved window nav"
 nnoremap <leader>h <c-w>h
 nnoremap <leader>j <c-w>j
@@ -196,8 +195,10 @@ vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 "dont select next on search under cursor"
 nnoremap * *N
-"show registers and prompt for put"
-nnoremap <leader>p :reg<cr>:put
+"show registers and prompt for put and copy/paste from system clip"
+nnoremap <leader>P :reg<cr>:put
+nnoremap <leader>p "*p
+nnoremap <leader>y "*yy
 "search list for word under cursor"
 nnoremap <leader>* [I :
 "search list"
@@ -212,3 +213,9 @@ nnoremap - _
 nnoremap + $
 vnoremap - _
 vnoremap + $h
+function! Review()
+    execute ":vertical new" 
+    execute ":%!git diff --staged" 
+    execute ":set filetype=diff"
+endfunction
+nnoremap <leader> r :call Review()<cr>
