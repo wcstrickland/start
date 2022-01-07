@@ -21,6 +21,7 @@ highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
 highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
 highlight SpecialKey ctermfg=DarkGrey
 set display=lastline
+set foldcolumn=1
 set hidden
 set listchars=multispace:···¦
 set list
@@ -213,9 +214,15 @@ nnoremap - _
 nnoremap + $
 vnoremap - _
 vnoremap + $h
+"open a split with a diff of staged changes"
 function! Review()
     execute ":vertical new" 
     execute ":%!git diff --staged" 
     execute ":set filetype=diff"
 endfunction
 nnoremap <leader> r :call Review()<cr>
+"todos"
+function Todos()
+    execute "vim TODO ./%"
+    execute ":norm Q"
+endfunction
