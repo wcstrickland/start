@@ -11,7 +11,7 @@ let g:netrw_preview=1  "privew vert"
 "default formatting"
 syntax on
 colorscheme desert
-set hlsearch  "highlight search"
+set hlsearch
 set incsearch
 highlight Search cterm=None ctermfg=Black ctermbg=Yellow
 highlight Visual cterm=None ctermfg=Black ctermbg=Green
@@ -20,9 +20,9 @@ highlight DiffChange cterm=None ctermfg=Black ctermbg=DarkBlue
 highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
 highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
 highlight SpecialKey ctermfg=DarkGrey
-set display=lastline
+set display=lastline "prevent @@@s at end of file"
 set foldcolumn=1
-set hidden
+set hidden "allow buffer abandoment"
 set listchars=multispace:···¦
 set list
 set laststatus=2   "always show status"
@@ -30,6 +30,7 @@ set splitright    "default vert split"
 set splitbelow "causes splits below"
 set path+=**    "fuzzy file finding"
 set wildmenu  "better menu"
+set wildignore=*/node_modules/*,*/.viminfo/*,*/.git/* "exclued from vimgrep"
 set number "default to numberd lines"
 set relativenumber "default to numberd lines"
 set termwinsize=10*0  "default terminal size"
@@ -38,20 +39,18 @@ set shiftwidth=4 "indent size"
 set expandtab "tabs are 4 spaces"
 set showcmd "show leader key during timeout period"
 set ignorecase
+set smartcase
 set autoindent
 set noerrorbells
 set novisualbell
-"set clipboard^=unamed"
-"set clipboard=unnamedplus allows pasting from OS clipboard"
 "simple statusline"
-set ruler
 set statusline=
 set statusline+=\%#ModeMsg#%.20F\ %#Title#%m\ %#NonText#%y\ %#Question#[%c]\ %#LineNr#[%l\|%L]%#CursorLine#
 "create and load views"
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 "set 80char warning colum"
-autocmd VimEnter *.* :set cc=80,100
+autocmd VimEnter *.* :set cc=80
 highlight ColorColumn ctermbg=8
 "recursive rough spell check macro: requires turning spelling on first with :set spell"
 let @s="]s1z=@s"
@@ -62,20 +61,16 @@ nnoremap G Gzz
 "single line up and down"
 nnoremap j gj
 nnoremap k gk
+nnoremap J }
+nnoremap K {
 nnoremap <expr> h (col('.') == 1) ? 'za' : 'h'
 "SHORTCUTS"
-"for loop"
-inoremap <leader>for for(let i = 0; i<; i++){<CR>console.log();<CR>}<esc>k>>kf<a
 "for of"
-inoremap <leader>of for(let el of ){<CR>console.log(el);<CR>}<esc>k>>kf)i
+inoremap <leader>for for(let el of ){<CR>console.log(el);<CR>}<esc>k>>kf)i
 "try catch block"
 inoremap <leader>try try{<CR><CR>}catch(e){<CR>console.log(e);<CR>}<esc>k>>kki<tab>
-"if else if else"
-inoremap <leader>elif if(){<CR>console.log();<CR>}else if(){<CR>console.log();<CR>}else{<CR>console.log();<CR>}<esc>6kf)i
 "map"
 inoremap <leader>map map((x) => ())<Esc>hi
-"function"
-inoremap <leader>func function (){<cr>console.log();<cr>}<esc>k>>kf(i
 "python main"
 inoremap <leader>main def<CR><cr>def main():<cr><tab>pass<cr><cr><esc>Iif __name__ == "__main__":<cr><tab>main()
 "basic pairs functionality with no Plugin"
@@ -136,7 +131,16 @@ inoremap ;; <C-x><C-f>
 "open a new split and read the current buffer into it"
 nnoremap <leader>s :vnew<cr>:0read #<cr>:close<cr>
 "if not in diffmode diff the splits. if in diff mode exit diff "
-nnoremap <expr> <leader>d &diff ? ':diffoff<cr>' : ':diffthis<cr><c-w>w:diffthis<cr>'
+if has("patch-8.1.0360")
+  set diffopt+=internal,algorithm:patience
+endif
+function! DiffThese()
+    if &diff
+        windo diffoff
+    else
+        windo diffthis
+    endif
+endfunction
 "projects set .viminfo at project level"
 function! SetProject()
     let path = expand('%:p')
@@ -159,10 +163,10 @@ function! ToggleQuickFix()
     endif
 endfunction
 nnoremap <silent>Q :call ToggleQuickFix()<cr>
-nnoremap J :cnext<cr>
-nnoremap K :cNext<cr>
+nnoremap } :cnext<cr>
+nnoremap { :cNext<cr>
 "replace exact word under cursor"
-nnoremap R :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
+nnoremap <leader>R :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
 "close and open"
 nnoremap <leader>q :bd<cr>
 nnoremap <leader>w :w<CR>
@@ -174,6 +178,7 @@ vnoremap <leader>[ di[]<esc>P
 vnoremap <leader>{ di{}<esc>P
 vnoremap <leader>' di''<esc>P
 vnoremap <leader>" di""<esc>P
+vnoremap <leader>` di``<esc>P
 "nerd tree substitue"
 nnoremap <leader>f :Vex 20<CR>
 autocmd VimResized * wincmd =
@@ -184,13 +189,14 @@ nnoremap <leader>h <c-w>h
 nnoremap <leader>j <c-w>j
 nnoremap <leader>k <c-w>k
 nnoremap <leader>l <c-w>l
+nnoremap <leader>< <c-w>10<
+nnoremap <leader>> <c-w>10>
+nnoremap <leader>+ <c-w>10+
+nnoremap <leader>- <c-w>10-
 "change buffers"
-nnoremap H :bn<cr>
-nnoremap L :bp<cr>
 nnoremap <leader>b :ls<cr>:b<space>
 "marks"
-nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyz<cr>:normal `
-nnoremap M :marks ABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal `
+nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal '
 "move highlighted blocks up and down"
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
@@ -210,17 +216,17 @@ function TrailWhite()
 endfunction
 nnoremap <leader>t :call TrailWhite()<cr>
 "better bol/eol"
-nnoremap - _
-nnoremap + $
-vnoremap - _
-vnoremap + $h
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L $h
 "open a split with a diff of staged changes"
 function! Review()
     execute ":vertical new" 
     execute ":%!git diff --staged" 
     execute ":set filetype=diff"
 endfunction
-nnoremap <leader> r :call Review()<cr>
+nnoremap <leader>r :call Review()<cr>
 "todos"
 function Todos()
     execute "vim TODO ./%"
