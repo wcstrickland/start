@@ -16,6 +16,8 @@ set incsearch
 highlight Search cterm=None ctermfg=Black ctermbg=Yellow
 highlight Visual cterm=None ctermfg=Black ctermbg=Green
 highlight DiffAdd cterm=None ctermfg=Black ctermbg=Green
+highlight diffAdded ctermfg=Green
+highlight diffRemoved ctermfg=Red
 highlight DiffChange cterm=None ctermfg=Black ctermbg=DarkBlue
 highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
 highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
