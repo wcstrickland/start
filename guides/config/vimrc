@@ -15,6 +15,7 @@ set hlsearch
 set incsearch
 highlight Search cterm=None ctermfg=Black ctermbg=Yellow
 highlight Visual cterm=None ctermfg=Black ctermbg=Green
+highlight SignColumn ctermbg=Black
 highlight DiffAdd cterm=None ctermfg=Black ctermbg=Green
 highlight diffAdded ctermfg=Green
 highlight diffRemoved ctermfg=Red
@@ -23,9 +24,11 @@ highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
 highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
 highlight SpecialKey ctermfg=DarkGrey
 set display=lastline "prevent @@@s at end of file"
-set foldcolumn=1
+set foldcolumn=1 "show the fold column while folds are open"
+set scl=number  "put signs over line numbers not good with plugins"
 set hidden "allow buffer abandoment"
-set listchars=multispace:···¦
+"set listchars=multispace:···¦"
+set listchars=space:·,trail:-
 set list
 set laststatus=2   "always show status"
 set splitright    "default vert split"
@@ -53,7 +56,7 @@ autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 "set 80char warning colum"
 autocmd VimEnter *.* :set cc=80
-highlight ColorColumn ctermbg=8
+highlight ColorColumn ctermbg=Grey
 "recursive rough spell check macro: requires turning spelling on first with :set spell"
 let @s="]s1z=@s"
 "rebind esc and clear highlighting"
@@ -191,14 +194,20 @@ nnoremap <leader>h <c-w>h
 nnoremap <leader>j <c-w>j
 nnoremap <leader>k <c-w>k
 nnoremap <leader>l <c-w>l
-nnoremap <leader>< <c-w>10<
-nnoremap <leader>> <c-w>10>
-nnoremap <leader>+ <c-w>10+
-nnoremap <leader>- <c-w>10-
+nnoremap <leader>< <c-w>5<
+nnoremap <leader>> <c-w>5>
+nnoremap <leader>+ <c-w>5+
+nnoremap <leader>- <c-w>5-
 "change buffers"
 nnoremap <leader>b :ls<cr>:b<space>
 "marks"
 nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal '
+function Markit(char)
+     call sign_define(a:char, {"text":a:char, "texthl": "WarningMsg"})
+     call sign_place(0, '', a:char, bufname(), {'lnum': line('.')})
+     execute "normal m" . a:char . "<cr>"
+endfunction
+nnoremap <leader>M :call Markit("")<left><left>
 "move highlighted blocks up and down"
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
