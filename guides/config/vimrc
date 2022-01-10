@@ -202,12 +202,25 @@ nnoremap <leader>- <c-w>5-
 nnoremap <leader>b :ls<cr>:b<space>
 "marks"
 nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal '
+function Marks()
+    let g:marks = getmarklist(bufname())
+    for mark in g:marks
+        "use regex to only do user defined marks"
+        let g:user = matchstr(mark["mark"], '\v[[:alpha:]]')
+        if empty(g:user)
+            continue
+        else
+            call sign_define(mark["mark"], {"text":mark["mark"], "texthl": "DiffDelete"})
+            call sign_place(0, 'marks', mark["mark"], bufname(), {'lnum': mark["pos"][1]})
+        endif
+    endfor
+endfunction
 function Markit(char)
-     call sign_define(a:char, {"text":a:char, "texthl": "WarningMsg"})
-     call sign_place(0, '', a:char, bufname(), {'lnum': line('.')})
+     call sign_define(a:char, {"text":a:char, "texthl": "DiffDelete"})
+     call sign_place(0, 'marks', a:char, bufname(), {'lnum': line('.')})
      execute "normal m" . a:char . "<cr>"
 endfunction
-nnoremap <leader>M :call Markit("")<left><left>
+nnoremap M :call Markit("")<left><left>
 "move highlighted blocks up and down"
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
