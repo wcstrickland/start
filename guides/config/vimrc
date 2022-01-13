@@ -1,18 +1,14 @@
-"headers"
-set nocompatible
+colorscheme desert
+syntax on
 filetype plugin indent on
 setlocal omnifunc=syntaxcomplete#Complete
-"file explorer"
+    "file explorer"
 let g:netrw_banner=0  "no banner"
 let g:netrw_altv=1  "split right"
 let g:netrw_liststyle=3  "tree view"
 let g:netrw_alto=0    "preview to right"
 let g:netrw_preview=1  "privew vert"
-"default formatting"
-syntax on
-colorscheme desert
-set hlsearch
-set incsearch
+    "highlighting"
 highlight Search cterm=None ctermfg=Black ctermbg=Yellow
 highlight Visual cterm=None ctermfg=Black ctermbg=Green
 highlight SignColumn ctermbg=Black
@@ -23,62 +19,44 @@ highlight DiffChange cterm=None ctermfg=Black ctermbg=DarkBlue
 highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
 highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
 highlight SpecialKey ctermfg=DarkGrey
-set display=lastline "prevent @@@s at end of file"
-set foldcolumn=1 "show the fold column while folds are open"
-set scl=number  "put signs over line numbers not good with plugins"
-set hidden "allow buffer abandoment"
-"set listchars=multispace:···¦"
-set listchars=space:·,trail:-
-set list
-set laststatus=2   "always show status"
-set splitright    "default vert split"
-set splitbelow "causes splits below"
-set path+=**    "fuzzy file finding"
-set wildmenu  "better menu"
+    "so good they should be defaults"
+set hlsearch incsearch smartcase noshowmatch
+set noswapfile hidden number relativenumber
+set showcmd  wildmenu path+=** complete-=i completeopt=menuone,noselect,noinsert
 set wildignore=*/node_modules/*,*/.viminfo/*,*/.git/* "exclued from vimgrep"
-set number "default to numberd lines"
-set relativenumber "default to numberd lines"
-set termwinsize=10*0  "default terminal size"
-set tabstop=4 "number of spaces per tab"
-set shiftwidth=4 "indent size"
-set expandtab "tabs are 4 spaces"
-set showcmd "show leader key during timeout period"
-set ignorecase
-set smartcase
-set autoindent
-set noerrorbells
-set novisualbell
-"simple statusline"
-set statusline=
-set statusline+=\%#ModeMsg#%.20F\ %#Title#%m\ %#NonText#%y\ %#Question#[%c]\ %#LineNr#[%l\|%L]%#CursorLine#
-"create and load views"
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview
-"set 80char warning colum"
+set noerrorbells novisualbell splitright splitbelow
+set laststatus=2 display=lastline scrolloff=3
+set foldcolumn=2 foldmethod=indent foldlevelstart=0 signcolumn=number
+set tabstop=4 shiftwidth=4 smarttab expandtab autoindent
+function Dashes()
+    setlocal listchars=multispace:···\|,tab:\ \
+    setlocal list
+endfunction
+command Dashes call Dashes()
+    "simple statusline"
+set statusline=  statusline+=\%#ModeMsg#%.20F\ %#Title#%m\ %#NonText#%y\ %#Question#[%c]\ %#LineNr#[%l\|%L]%#CursorLine#
+    "set 80char warning colum"
 autocmd VimEnter *.* :set cc=80
-highlight ColorColumn ctermbg=Grey
-"recursive rough spell check macro: requires turning spelling on first with :set spell"
+highlight ColorColumn ctermbg=DarkGrey
+    "recursive rough spell check macro: requires turning spelling on first with :set spell"
 let @s="]s1z=@s"
-"rebind esc and clear highlighting"
+    "rebind esc and clear highlighting"
 inoremap jj <Esc>:nohls<cr>
-"jumpt to bottom and center"
+    "jumpt to bottom and center"
 nnoremap G Gzz
-"single line up and down"
+    "single line up and down"
 nnoremap j gj
 nnoremap k gk
 nnoremap J }
 nnoremap K {
 nnoremap <expr> h (col('.') == 1) ? 'za' : 'h'
-"SHORTCUTS"
-"for of"
+    "SHORTCUTS"
 inoremap <leader>for for(let el of ){<CR>console.log(el);<CR>}<esc>k>>kf)i
-"try catch block"
 inoremap <leader>try try{<CR><CR>}catch(e){<CR>console.log(e);<CR>}<esc>k>>kki<tab>
-"map"
 inoremap <leader>map map((x) => ())<Esc>hi
-"python main"
 inoremap <leader>main def<CR><cr>def main():<cr><tab>pass<cr><cr><esc>Iif __name__ == "__main__":<cr><tab>main()
-"basic pairs functionality with no Plugin"
+inoremap <leader>doc /**<cr><cr>@fucntion<cr>@param{type}[name]<cr>@return{type}<cr>/
+    "basic pairs functionality with no Plugin"
 function! PassOverClosing(char)
     let g:closers = [')', ']', '}']
     let g:curChar = getline('.')[col('.')-0]
@@ -97,22 +75,24 @@ inoremap {<cr> {<cr><cr>}<esc>ki
 inoremap <silent>} <esc>:call PassOverClosing('}')<cr>a
 inoremap " ""<esc>i
 inoremap "" <esc>ls"
+inoremap ` ``<esc>i
+inoremap `` <esc>ls`
 inoremap ' ''<esc>i
 inoremap '' <esc>ls'
 let mapleader = " "
-"autocomplete"
-"keep autocomplete up sub <C-N> for <C-O> for less problems"
+    "autocomplete"
+    "keep autocomplete up sub <C-N> for <C-O> for less problems"
 function! ToggleComplete()
     if !exists('#ToggleComplete#CursorMovedI')
         augroup ToggleComplete
             autocmd!
             autocmd CursorMovedI * if pumvisible()==0 | silent call  feedkeys("\<C-X>\<C-N>", 'n')
         augroup END
-    else 
+    else
         augroup ToggleComplete
-            autocmd! 
-        augroup END 
-    endif 
+            autocmd!
+        augroup END
+    endif
 endfunction
 function! ToggleOmni()
     if !exists('#ToggleOmni#CursorMovedI')
@@ -120,22 +100,19 @@ function! ToggleOmni()
             autocmd!
             autocmd CursorMovedI * if pumvisible()==0 | silent call  feedkeys("\<C-X>\<C-O>", 'n')
         augroup END
-    else 
+    else
         augroup ToggleOmni
-            autocmd! 
-        augroup END 
-    endif 
+            autocmd!
+        augroup END
+    endif
 endfunction
 nnoremap <leader>a :call ToggleComplete()<CR>
 nnoremap <leader>o :call ToggleOmni()<CR>
-set complete-=i
-set completeopt=menuone,noselect,noinsert
 inoremap kk <C-n>
-"filepath complete"
 inoremap ;; <C-x><C-f>
-"open a new split and read the current buffer into it"
+    "open a new split and read the current buffer into it"
 nnoremap <leader>s :vnew<cr>:0read #<cr>:close<cr>
-"if not in diffmode diff the splits. if in diff mode exit diff "
+    "if not in diffmode diff the splits. if in diff mode exit diff "
 if has("patch-8.1.0360")
   set diffopt+=internal,algorithm:patience
 endif
@@ -146,19 +123,12 @@ function! DiffThese()
         windo diffthis
     endif
 endfunction
-"projects set .viminfo at project level"
-function! SetProject()
-    let path = expand('%:p')
-    let g:stub = matchstr(path, '\v\/home\/bill\/[a-z]*[A-Z]*[0-9]*\/')
-    let g:full =  "'100,<50,s10,h,n" . g:stub .  '.viminfo'
-    let &viminfo = g:full
-endfunction
-autocmd BufRead *.* :call SetProject()
-"set linter and run with every save"
+command Diff call DiffThese()
+    "set linter and run with every save"
 autocmd FileType python compiler pylint
 autocmd FileType javascript compiler eslint
 autocmd BufWritePost *.py,*.js silent make! <afile> | silent redraw!
-"quickfix list"
+    "quickfix list"
 function! ToggleQuickFix()
     if empty(filter(getwininfo(), 'v:val.quickfix'))
         copen
@@ -170,26 +140,35 @@ endfunction
 nnoremap <silent>Q :call ToggleQuickFix()<cr>
 nnoremap } :cnext<cr>
 nnoremap { :cNext<cr>
-"replace exact word under cursor"
-nnoremap <leader>R :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
-"close and open"
+    "replace exact word under cursor"
+nnoremap <leader>r :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
+    "close and open"
 nnoremap <leader>q :bd<cr>
 nnoremap <leader>w :w<CR>
 nnoremap <leader>! :w !sudo tee %<CR>
 nnoremap zq ZQ
-"surround"
+    "surround"
 vnoremap <leader>( di()<esc>P
 vnoremap <leader>[ di[]<esc>P
 vnoremap <leader>{ di{}<esc>P
 vnoremap <leader>' di''<esc>P
 vnoremap <leader>" di""<esc>P
 vnoremap <leader>` di``<esc>P
-"nerd tree substitue"
+vnoremap <leader>< :call Surround("")<left><left>
+
+function Surround(tag)
+    execute 'normal "Zy'
+    execute 'normal gvd'
+    execute 'normal i<' . a:tag . '><' . a:tag . '/>'
+    execute 'normal F<P'
+endfunction
+
+ "nerd tree substitue"
 nnoremap <leader>f :Vex 20<CR>
 autocmd VimResized * wincmd =
-"commenting"
+    "commenting"
 vnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? ':norm 0d2l<cr>' : ':norm 0i//<esc>'
-"improved window nav"
+    "improved window nav"
 nnoremap <leader>h <c-w>h
 nnoremap <leader>j <c-w>j
 nnoremap <leader>k <c-w>k
@@ -198,9 +177,10 @@ nnoremap <leader>< <c-w>5<
 nnoremap <leader>> <c-w>5>
 nnoremap <leader>+ <c-w>5+
 nnoremap <leader>- <c-w>5-
-"change buffers"
+    "change buffers"
 nnoremap <leader>b :ls<cr>:b<space>
-"marks"
+nnoremap - :bN<cr>
+    "marks"
 nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal '
 function Marks()
     let g:marks = getmarklist(bufname())
@@ -215,44 +195,47 @@ function Marks()
         endif
     endfor
 endfunction
+command Marks call Marks()
 function Markit(char)
      call sign_define(a:char, {"text":a:char, "texthl": "DiffDelete"})
      call sign_place(0, 'marks', a:char, bufname(), {'lnum': line('.')})
      execute "normal m" . a:char . "<cr>"
 endfunction
 nnoremap M :call Markit("")<left><left>
-"move highlighted blocks up and down"
+    "move highlighted blocks up and down"
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
-"dont select next on search under cursor"
+    "dont select next on search under cursor"
 nnoremap * *N
-"show registers and prompt for put and copy/paste from system clip"
+    "show registers and prompt for put and copy/paste from system clip"
 nnoremap <leader>P :reg<cr>:put
 nnoremap <leader>p "*p
 nnoremap <leader>y "*yy
-"search list for word under cursor"
+    "search list for word under cursor"
+nnoremap / /\v
 nnoremap <leader>* [I :
-"search list"
+    "search list"
 nnoremap <leader>/ :g/
-"trim all trailing whitespace"
+    "trim all trailing whitespace"
 function TrailWhite()
     execute '%s/\s\+$//e'
 endfunction
 nnoremap <leader>t :call TrailWhite()<cr>
-"better bol/eol"
+    "better bol/eol"
 nnoremap H ^
 nnoremap L $
 vnoremap H ^
 vnoremap L $h
-"open a split with a diff of staged changes"
+    "open a split with a diff of staged changes"
 function! Review()
     execute ":vertical new" 
     execute ":%!git diff --staged" 
     execute ":set filetype=diff"
 endfunction
-nnoremap <leader>r :call Review()<cr>
-"todos"
+command Review call Review()
+    "todos"
 function Todos()
     execute "vim TODO ./%"
     execute ":norm Q"
 endfunction
+command Todos call Todos()
