@@ -1,8 +1,3 @@
-colorscheme desert
-syntax on
-filetype plugin indent on
-setlocal omnifunc=syntaxcomplete#Complete
-
 "file explorer"
     let g:netrw_banner=0  "no banner"
     let g:netrw_altv=1  "split right"
@@ -11,6 +6,9 @@ setlocal omnifunc=syntaxcomplete#Complete
     let g:netrw_preview=1  "privew vert"
 
 "highlighting"
+    colorscheme desert
+    syntax on
+    filetype plugin indent on
     highlight Search cterm=None ctermfg=Black ctermbg=Yellow
     highlight Visual cterm=None ctermfg=Black ctermbg=Green
     highlight SignColumn ctermbg=Black
@@ -21,8 +19,9 @@ setlocal omnifunc=syntaxcomplete#Complete
     highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
     highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
     highlight SpecialKey ctermfg=DarkGrey
-    "
+    
 "so good they should be defaults"
+    setlocal omnifunc=syntaxcomplete#Complete
     set hlsearch incsearch smartcase noshowmatch
     set noswapfile hidden number relativenumber lazyredraw ttyfast
     set showcmd  wildmenu path+=** complete-=i completeopt=menuone,noselect,noinsert
@@ -90,7 +89,8 @@ setlocal omnifunc=syntaxcomplete#Complete
     inoremap `` <esc>ls`
     inoremap ' ''<esc>i
     inoremap '' <esc>ls'
-    let mapleader = " "
+
+let mapleader = " "
 
 "autocomplete"
 "keep autocomplete up sub <C-N> for <C-O> for less problems"
@@ -142,6 +142,7 @@ setlocal omnifunc=syntaxcomplete#Complete
 "set linter and run with every save"
     autocmd FileType python compiler pylint
     autocmd FileType javascript compiler eslint
+    autocmd FileType javascript set filetype=typescript
     autocmd BufWritePost *.py,*.js silent make! <afile> | silent redraw!
 
 "quickfix list"
@@ -167,8 +168,8 @@ setlocal omnifunc=syntaxcomplete#Complete
     nnoremap zq ZQ
 
 "surround"
-    vnoremap s :call Surround("")<left><left>
-    vnoremap <leader>> :call SurroundTag("")<left><left>
+    xnoremap s :call Surround("")<left><left>
+    xnoremap S :call SurroundTag("")<left><left>
     function Surround(chars)
         execute 'normal gvd'
         execute 'normal i' . a:chars
@@ -180,7 +181,7 @@ setlocal omnifunc=syntaxcomplete#Complete
         execute 'normal 0i<' . a:tag . '>'
         execute 'normal o'
         execute 'normal o'
-        execute 'normal 0i<' . a:tag . '/>'
+        execute 'normal 0i</' . a:tag . '>'
         execute 'normal kP'
     endfunction
 
@@ -189,7 +190,7 @@ setlocal omnifunc=syntaxcomplete#Complete
     autocmd VimResized * wincmd =
 
 "commenting"
-    vnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? ':norm 0d2l<cr>' : ':norm 0i//<esc>'
+    xnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? ':norm 0d2l<cr>' : ':norm 0i//<esc>'
 
 "improved window nav"
     nnoremap <leader>h <c-w>h
@@ -229,19 +230,17 @@ setlocal omnifunc=syntaxcomplete#Complete
     nnoremap M :call Markit("")<left><left>
 
 "move highlighted blocks up and down"
-    vnoremap J :m '>+1<CR>gv=gv
-    vnoremap K :m '<-2<CR>gv=gv
-
-"dont select next on search under cursor"
-    nnoremap * *N
+    xnoremap J :m '>+1<CR>gv=gv
+    xnoremap K :m '<-2<CR>gv=gv
 
 "show registers and prompt for put and copy/paste from system clip"
     nnoremap <leader>P :reg<cr>:put
     nnoremap <leader>p "*p
-    nnoremap <leader>y "*yy
+    nnoremap <leader>y "*yy 
+    nnoremap <leader>Y "+yy
 
 "search stuff"
-    nnoremap / /\v
+    nnoremap * *N
     nnoremap <leader>* [I :
     nnoremap <leader>/ :g/
 
@@ -254,8 +253,8 @@ setlocal omnifunc=syntaxcomplete#Complete
 "better bol/eol"
     nnoremap H ^
     nnoremap L $
-    vnoremap H ^
-    vnoremap L $h
+    xnoremap H ^
+    xnoremap L $h
 
 "open a split with a diff of staged changes"
     function! Review()
