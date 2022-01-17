@@ -22,7 +22,7 @@
     
 "so good they should be defaults"
     setlocal omnifunc=syntaxcomplete#Complete
-    set hlsearch incsearch smartcase noshowmatch
+    set hlsearch incsearch ignorecase smartcase noshowmatch
     set noswapfile hidden number relativenumber lazyredraw ttyfast
     set showcmd  wildmenu path+=** complete-=i completeopt=menuone,noselect,noinsert
     set wildignore=*/node_modules/*,*/.viminfo/*,*/.git/* "exclued from vimgrep"
@@ -177,7 +177,11 @@ let mapleader = " "
     function Surround(chars)
         execute 'normal gvd'
         execute 'normal i' . a:chars
-        execute 'normal P'
+        if a:chars == "\"" || "\'"
+            execute 'normal p'
+        else
+            execute 'normal P'
+        endif
     endfunction
     function SurroundTag(tag)
         execute 'normal "Zy'
