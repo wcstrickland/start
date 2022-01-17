@@ -60,6 +60,10 @@
     nnoremap <expr> h (col('.') == 1) ? 'za' : 'h'
 
 "SHORTCUTS"
+    function Log(phrase)
+        execute 'normal i console.log(`' . a:phrase . ': ${' . a:phrase . '} on line ' . string(line(".")) . ' `)'
+    endfunction
+    inoremap <leader>log <esc>:call Log("")<left><left>
     inoremap <leader>for for(let el of ){<CR>console.log(el);<CR>}<esc>k>>kf)i
     inoremap <leader>try try{<CR><CR>}catch(e){<CR>console.log(e);<CR>}<esc>k>>kki<tab>
     inoremap <leader>map map((x) => ())<Esc>hi
