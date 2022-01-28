@@ -19,11 +19,12 @@
     highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
     highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
     highlight SpecialKey ctermfg=DarkGrey
-    
+    highlight TablineFill ctermbg=Magenta ctermfg=Black
+
 "so good they should be defaults"
     setlocal omnifunc=syntaxcomplete#Complete
     set hlsearch incsearch ignorecase smartcase noshowmatch
-    set noswapfile hidden number relativenumber lazyredraw ttyfast
+    set noswapfile hidden number relativenumber lazyredraw ttyfast showtabline=2
     set showcmd  wildmenu path+=** complete-=i completeopt=menuone,noselect,noinsert
     set wildignore=*/node_modules/*,*/.viminfo/*,*/.git/* "exclued from vimgrep"
     set noerrorbells novisualbell splitright splitbelow
@@ -37,7 +38,7 @@
     command Dashes call Dashes()
 
 "simple statusline"
-    set statusline=  statusline+=\%#ModeMsg#%.20F\ %#Title#%m\ %#NonText#%y\ %#Question#[%c]\ %#LineNr#[%l\|%L]%#CursorLine#
+    set statusline=  statusline+=%#CursorLine#\ \ \ %#ModeMsg#%.20t\ %#Title#%m\ %#NonText#%y\ %#Question#[%c]\ %#LineNr#[%l\|%L]%#CursorLine#
 
 "set 80char warning colum"
     autocmd VimEnter *.* :set cc=80
@@ -52,6 +53,7 @@
 "jumpt to bottom and center"
     nnoremap G Gzz
 
+
 "single line up and down"
     nnoremap j gj
     nnoremap k gk
@@ -61,7 +63,7 @@
 
 "SHORTCUTS"
     function Log(phrase)
-        execute 'normal i console.log(`' . a:phrase . ': ${' . a:phrase . '} on line ' . string(line(".")) . ' `)'
+        execute 'normal i console.log(`' . a:phrase . ': ${' . a:phrase . '} on line ' . string(line(".")) 
     endfunction
     inoremap <leader>log <esc>:call Log("")<left><left>
     inoremap <leader>for for(let el of ){<CR>console.log(el);<CR>}<esc>k>>kf)i
@@ -144,10 +146,12 @@ let mapleader = " "
     command Diff call DiffThese()
 
 "set linter and run with every save"
+    autocmd FileType javascript set filetype=typescript
     autocmd FileType python compiler pylint
     autocmd FileType javascript compiler eslint
-    autocmd FileType javascript set filetype=typescript
+    autocmd FileType typescript compiler eslint
     autocmd BufWritePost *.py,*.js silent make! <afile> | silent redraw!
+    autocmd BufReadPre * if &filetype != "viminfo" | call Dashes()
 
 "quickfix list"
     function! ToggleQuickFix()
@@ -195,7 +199,7 @@ let mapleader = " "
 
 "nerdtree"
     nnoremap <leader>f :Vex 20<CR>
-    autocmd VimResized * wincmd =
+    au BufNew * wincmd =
 
 "commenting"
     xnoremap <expr> <leader>c getline('.')[col('1')] == "/" ? ':norm 0d2l<cr>' : ':norm 0i//<esc>'
@@ -212,7 +216,7 @@ let mapleader = " "
 
 "change buffers"
     nnoremap <leader>b :ls<cr>:b<space>
-    nnoremap - :bN<cr>
+    nnoremap + :bn<cr>
 
 "marks"
     nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal '
@@ -230,6 +234,7 @@ let mapleader = " "
         endfor
     endfunction
     command Marks call Marks()
+    au BufEnter *.* call Marks()
     function Markit(char)
          call sign_define(a:char, {"text":a:char, "texthl": "DiffDelete"})
          call sign_place(0, 'marks', a:char, bufname(), {'lnum': line('.')})
@@ -244,8 +249,8 @@ let mapleader = " "
 "show registers and prompt for put and copy/paste from system clip"
     nnoremap <leader>P :reg<cr>:put
     nnoremap <leader>p "*p
-    nnoremap <leader>y "*yy 
-    nnoremap <leader>Y "+yy
+    nnoremap Y y$
+    vnoremap <leader>y "*y gv"+y
 
 "search stuff"
     nnoremap * *N
@@ -260,9 +265,9 @@ let mapleader = " "
 
 "better bol/eol"
     nnoremap H ^
-    nnoremap L $
+    nnoremap L g$
     xnoremap H ^
-    xnoremap L $h
+    xnoremap L g$h
 
 "open a split with a diff of staged changes"
     function! Review()
@@ -278,3 +283,23 @@ let mapleader = " "
         execute ":norm Q"
     endfunction
     command Todos call Todos()
+
+"Bufferline"
+    function Bufline()
+        let g:Buflist = getbufinfo()
+        let g:Bufnames = ''
+        for buf in getbufinfo()
+            if buf.name == expand('%:p')
+                let buf.name = matchstr(buf.name, '\v[^/]*$')
+                let g:Bufnames .= "**" . buf.name . "**" . " \| "
+            else
+                let buf.name = matchstr(buf.name, '\v[^/]*$')
+                let g:Bufnames = g:Bufnames . buf.name . " \| "
+            endif
+        endfor
+        set tabline=%!Bufnames
+    endfunction
+    au BufEnter * call Bufline()
+    au BufLeave * call Bufline()
+    au BufCreate * call Bufline()
+    au BufDelete * call Bufline()

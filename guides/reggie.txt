@@ -70,3 +70,83 @@ Jenny Monty 205-413-9878   James Monty 205-413-9878   James Monty 205-413-9878  
 James Monty 265-743-8888   Jenny Monty 265-743-8888   James Monty 265-743-8888   205-223-4113
 James Monty 205-143-3848   James Bobbi 205-143-3848   Dicky Bobbi 205-143-3848   205-223-4110
 James Monty 205-223-4113   James Monty 205-223-4113   James Monty 205-223-4113   305-743-8888
+
+ 
+Rough de typescripting
+%s/\v\: [^,;){}=]+//gc
+
+      location,
+const factory= split.SplitFactory({
+
+import express, { Request, Response, NextFunction } from 'express';
+import split = require('@splitsoftware/splitio');
+
+interface LocationWithTimezone {
+  location: string;
+  timezoneName: string;
+  timezoneAbbr: string;
+  utcOffset: number;
+};
+
+const app = express();
+const port = 3000;
+
+app.listen(port, () => {
+  console.log(`Timezones by location application is running on port ${port}.`);
+});
+
+const factory= split.SplitFactory({
+  core: {
+    authorizationKey: YOUR_API_KEY
+  }
+});
+
+const client= factory.client();
+
+const getLocationsWithTimezones = (request, response, next) => {
+  let locations= [
+    {
+      location: 'Germany',
+      timezoneName: 'Central European Time',
+      timezoneAbbr: 'CET',
+      utcOffset: 1
+    },
+    {
+      location: 'China',
+      timezoneName: 'China Standard Time',
+      timezoneAbbr: 'CST',
+      utcOffset: 8
+    },
+    {
+      location: 'Argentina',
+      timezoneName: 'Argentina Time',
+      timezoneAbbr: 'ART',
+      utcOffset: -3
+    },
+    {
+      location: 'Japan',
+      timezoneName: 'Japan Standard Time',
+      timezoneAbbr: 'JST',
+      utcOffset: 9
+    }
+  ];
+
+  if (request.treatment == 'on')
+    locations.push({
+      location: 'Kenya',
+      timezoneName: 'Eastern Africa Time',
+      timezoneAbbr: 'EAT',
+      utcOffset: 3
+    });
+
+  response.status(200).json(locations);
+};
+
+const getTreatmentMiddleware = function (request, response, next) {
+  const key= <SplitIO.SplitKey>request.headers['authorization'];
+  request.treatment = client.getTreatment(key, 'timezone_split');
+  next();
+};
+
+app.get('/timezones', getTreatmentMiddleware, getLocationsWithTimezones);
+Code language: C# (cs)
