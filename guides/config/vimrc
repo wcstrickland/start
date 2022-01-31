@@ -20,6 +20,7 @@
     highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
     highlight SpecialKey ctermfg=DarkGrey
     highlight TablineFill ctermbg=Magenta ctermfg=Black
+    highlight VertSplit ctermfg=Black ctermbg=Black
 
 "so good they should be defaults"
     setlocal omnifunc=syntaxcomplete#Complete
@@ -98,6 +99,8 @@
 
 let mapleader = " "
 
+set pastetoggle=<F2>
+nnoremap <F3> :so /home/bill/.vimrc<cr>
 "autocomplete"
 "keep autocomplete up sub <C-N> for <C-O> for less problems"
     function! ToggleComplete()
@@ -170,7 +173,7 @@ let mapleader = " "
     nnoremap <leader>r :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
 
 "close and open"
-    nnoremap <leader>q :bd<cr>
+    nnoremap <leader>q :bw<cr>
     nnoremap <leader>w :w<CR>
     nnoremap <leader>! :w !sudo tee %<CR>
     nnoremap zq ZQ
@@ -256,6 +259,7 @@ let mapleader = " "
     nnoremap * *N
     nnoremap <leader>* [I :
     nnoremap <leader>/ :g/
+    nnoremap g* *Ncgn
 
 "trim all trailing whitespace"
     function TrailWhite()
