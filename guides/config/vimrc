@@ -19,8 +19,8 @@
     highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
     highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
     highlight SpecialKey ctermfg=DarkGrey
-    highlight TablineFill ctermbg=Magenta ctermfg=Black
-    highlight VertSplit ctermfg=Black ctermbg=Black
+    highlight TablineFill cterm=bold ctermbg=Black ctermfg=Magenta
+    highlight VertSplit ctermfg=Black cterm=bold ctermbg=Black
 
 "so good they should be defaults"
     setlocal omnifunc=syntaxcomplete#Complete
@@ -60,7 +60,11 @@
     nnoremap k gk
     nnoremap J }
     nnoremap K {
+    xnoremap J }
+    xnoremap k {
     nnoremap <expr> h (col('.') == 1) ? 'za' : 'h'
+    nnoremap { g,
+    nnoremap } g;
 
 "SHORTCUTS"
     function Log(phrase)
@@ -166,8 +170,6 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
         endif
     endfunction
     nnoremap <silent>Q :call ToggleQuickFix()<cr>
-    nnoremap } :cnext<cr>
-    nnoremap { :cNext<cr>
 
 "replace exact word under cursor"
     nnoremap <leader>r :%s/\<<c-r>=expand("<cword>")<cr>\>//gc<left><left><left>
@@ -245,9 +247,6 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
     endfunction
     nnoremap M :call Markit("")<left><left>
 
-"move highlighted blocks up and down"
-    xnoremap J :m '>+1<CR>gv=gv
-    xnoremap K :m '<-2<CR>gv=gv
 
 "show registers and prompt for put and copy/paste from system clip"
     nnoremap <leader>P :reg<cr>:put
@@ -260,6 +259,8 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
     nnoremap <leader>* [I :
     nnoremap <leader>/ :g/
     nnoremap g* *Ncgn
+    nnoremap \ /\v
+    nnoremap \| <s-k>
 
 "trim all trailing whitespace"
     function TrailWhite()
@@ -292,7 +293,7 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
     function Bufline()
         let g:Buflist = getbufinfo()
         let g:Bufnames = ''
-        for buf in getbufinfo()
+        for buf in getbufinfo({'buflisted':1})
             if buf.name == expand('%:p')
                 let buf.name = matchstr(buf.name, '\v[^/]*$')
                 let g:Bufnames .= "**" . buf.name . "**" . " \| "
@@ -307,3 +308,11 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
     au BufLeave * call Bufline()
     au BufCreate * call Bufline()
     au BufDelete * call Bufline()
+
+"figlet comments"
+function Fig(chars)
+    execute ':.!figlet ' . a:chars
+    execute 'normal 0'
+    execute 'normal5jI// '
+endfunction
+
