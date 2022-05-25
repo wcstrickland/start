@@ -18,7 +18,7 @@
     highlight DiffChange cterm=None ctermfg=Black ctermbg=DarkBlue
     highlight DiffDelete cterm=None ctermfg=Black ctermbg=Red
     highlight DiffText cterm=None ctermfg=Black ctermbg=Yellow
-    highlight SpecialKey ctermfg=DarkGrey
+    highlight SpecialKey ctermfg=DarkGrey cterm=bold
     highlight TablineFill cterm=bold ctermbg=Black ctermfg=Magenta
     highlight VertSplit ctermfg=Black cterm=bold ctermbg=Black
 
@@ -88,6 +88,16 @@
             normal la
         endif
     endfunction
+
+    function! Quotes(char)
+        let g:curChar = getline('.')[col('.')-0]
+        if a:char == g:curChar
+            normal la
+        else
+            execute "normal! a" . a:char . a:char
+            normal i
+        endif
+    endfunction
     inoremap ( ()<esc>i
     inoremap <silent>) <esc>:call PassOverClosing(')')<cr>a
     inoremap [ []<esc>i
@@ -95,12 +105,10 @@
     inoremap { {}<esc>i
     inoremap {<cr> {<cr><cr>}<esc>ki
     inoremap <silent>} <esc>:call PassOverClosing('}')<cr>a
-    inoremap " ""<esc>i
-    inoremap "" <esc>ls"
-    inoremap ` ``<esc>i
-    inoremap `` <esc>ls`
-    inoremap ' ''<esc>i
-    inoremap '' <esc>ls'
+    inoremap <silent>" <esc>:call Quotes('"')<cr>a
+    inoremap <silent>' <esc>:call Quotes("'")<cr>a
+    inoremap <silent>` <esc>:call Quotes('`')<cr>a
+
 
 let mapleader = " "
 
@@ -182,8 +190,7 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
     nnoremap zq ZQ
 
 "surround"
-    xnoremap s :call Surround("")<left><left>
-    xnoremap S :call SurroundTag("")<left><left>
+    xnoremap S :call Surround("")<left><left>
     function Surround(chars)
         execute 'normal gvd'
         execute 'normal i' . a:chars
@@ -192,15 +199,6 @@ nnoremap <F3> :so /home/bill/.vimrc<cr>
         else
             execute 'normal P'
         endif
-    endfunction
-    function SurroundTag(tag)
-        execute 'normal "Zy'
-        execute 'normal gvd'
-        execute 'normal 0i<' . a:tag . '>'
-        execute 'normal o'
-        execute 'normal o'
-        execute 'normal 0i</' . a:tag . '>'
-        execute 'normal kP'
     endfunction
 
 "nerdtree"
