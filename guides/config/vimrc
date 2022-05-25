@@ -61,7 +61,7 @@
     nnoremap J }
     nnoremap K {
     xnoremap J }
-    xnoremap k {
+    xnoremap K {
     nnoremap <expr> h (col('.') == 1) ? 'za' : 'h'
     nnoremap { g,
     nnoremap } g;
@@ -79,9 +79,10 @@
 
 "basic pairs functionality with no Plugin"
     function! PassOverClosing(char)
-        let g:closers = [')', ']', '}']
+       "let g:closers = [')', ']', '}']" 
         let g:curChar = getline('.')[col('.')-0]
-        if index(g:closers, g:curChar) < 0
+       "if index(g:closers, g:curChar) < 0" 
+        if a:char != g:curChar
             execute "normal! a" . a:char
         else
             normal la
