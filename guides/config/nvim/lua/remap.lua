@@ -4,6 +4,7 @@ local builtin = require('telescope.builtin')
 vim.g.mapleader = " "
 
 vim.keymap.set("n", "<leader>e", vim.cmd.Lexplore)
+vim.keymap.set("n", "<leader>ww", ":Neorg workspace ")
 
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 

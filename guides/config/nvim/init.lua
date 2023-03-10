@@ -9,11 +9,12 @@ require('onedark').load()
 require('neorg').setup {
     load = {
         ["core.defaults"] = {},
+        ["core.norg.concealer"] = {},
         ["core.norg.dirman"] = {
             config = {
                 workspaces = {
-                    work = "~/notes/work",
-                    home = "~/notes/home",
+                    work = "~/.notes/work",
+                    home = "~/.notes/home",
                 }
             }
         }

@@ -1,4 +1,3 @@
-
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
@@ -34,4 +33,4 @@ vim.opt.shiftwidth = 4
 vim.opt.display = "lastline"
 vim.opt.mouse = "a"
 vim.opt.foldmethod = "indent"
-
+vim.opt.foldlevel = 4
