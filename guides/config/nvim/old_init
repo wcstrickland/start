@@ -6,15 +6,12 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " let Vundle manage Vundle, required
-Plugin 'nvim-lua/plenary.nvim'
-Plugin 'glacambre/firenvim'
-Plugin 'nvim-lua/popup.nvim'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'luochen1990/rainbow'
+Plugin 'vimwiki/vimwiki'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'yggdroot/indentline'
-" Plugin 'neoclide/coc.nvim'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-fugitive'
@@ -22,14 +19,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'nvim-telescope/telescope.nvim'
-Plugin 'neovim/nvim-lspconfig'
-Plugin 'williamboman/nvim-lsp-installer', { 'branch': 'main' }
-Plugin 'hrsh7th/nvim-compe'
-Plugin 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plugin 'nvim-treesitter/nvim-treesitter-textobjects'
+Plugin 'nvim-neorg/neorg'
 
-" Plugin 'glepnir/galaxyline.nvim', { 'branch': 'main' }
-Plugin 'kyazdani42/nvim-web-devicons'  " needed for galaxyline icons
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -57,29 +48,15 @@ let g:airline_theme ='angr'
 
 "so good they should be defaults"
     set hlsearch incsearch ignorecase smartcase noshowmatch
-    set noswapfile hidden number relativenumber lazyredraw ttyfast showtabline=2
+    set noswapfile hidden number lazyredraw ttyfast showtabline=2
     set showcmd  wildmenu path+=** complete-=i completeopt=menuone,noselect,noinsert
     set wildignore=*/node_modules/*,*/.viminfo/*,*/.git/* "exclued from vimgrep"
     set noerrorbells novisualbell splitright splitbelow
     set laststatus=2 display=lastline scrolloff=3 mouse=a
-    set foldmethod=indent foldlevelstart=0 signcolumn=number
+    set foldmethod=indent foldlevelstart=0
     set tabstop=4 shiftwidth=4 smarttab expandtab autoindent
     set nobackup nowritebackup shortmess+=c updatetime=300
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-"coc"
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
-
-" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 "statusline"
     set statusline=  statusline+=%#CursorLine#\ \ \ %#ModeMsg#%.20t\ %#Title#%m\ %#NonText#%y\ %#Question#[%c]\ %#LineNr#[%l\|%L]%#CursorLine#
@@ -100,10 +77,10 @@ inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 "single line up and down"
     nnoremap j gj
     nnoremap k gk
-    nnoremap J }
-    nnoremap K {
-    xnoremap J }
-    xnoremap K {
+    nnoremap J <C-D>
+    nnoremap K <C-U>
+    xnoremap J <C-D>
+    xnoremap K <C-U>
     nnoremap <expr> h (col('.') == 1) ? 'za' : 'h'
     nnoremap { g;
     nnoremap } g,
@@ -168,21 +145,6 @@ nnoremap <F3> :so /home/bill/.config/nvim/init.vim<cr>
 
 "marks"
     nnoremap <leader>m :marks abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<cr>:normal '
-    function Marks()
-        let g:marks = getmarklist(bufname())
-        for mark in g:marks
-            "use regex to only do user defined marks"
-            let g:user = matchstr(mark["mark"], '\v[[:alpha:]]')
-            if empty(g:user)
-                continue
-            else
-                call sign_define(mark["mark"], {"text":mark["mark"], "texthl": "DiffDelete"})
-                call sign_place(0, 'marks', mark["mark"], bufname(), {'lnum': mark["pos"][1]})
-            endif
-        endfor
-    endfunction
-    command Marks call Marks()
-    au BufEnter *.* call Marks()
     function Markit(char)
          call sign_define(a:char, {"text":a:char, "texthl": "DiffDelete"})
          call sign_place(0, 'marks', a:char, bufname(), {'lnum': line('.')})
@@ -200,7 +162,7 @@ nnoremap <F3> :so /home/bill/.config/nvim/init.vim<cr>
 "search stuff"
     nnoremap * *N
     nnoremap <leader>* :vim/\<<c-r>=expand("<cword>")<cr>\>/j %<cr>
-    nnoremap <leader>/ :vim/ /%<left><left><left>
+    nnoremap <leader>/ :vim//%<left><left>
     nnoremap g* *Ncgn
     nnoremap \ /\v
     nnoremap \| <s-k>
@@ -231,18 +193,3 @@ nnoremap <F3> :so /home/bill/.config/nvim/init.vim<cr>
     endfunction
     command Todos call Todos()
 
-
-"figlet comments"
-function Fig(chars)
-    execute ':.!figlet ' . a:chars
-    execute 'normal 0'
-    execute 'normal5jI// '
-endfunction
-
-"require("statusbar")"
-
-lua <<EOF
-require("lsp")
-require("treesitter")
-require("completion")
-EOF
